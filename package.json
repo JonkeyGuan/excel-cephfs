@@ -1,5 +1,5 @@
 {
-  "name": "excel",
+  "name": "excel-cephfs",
   "version": "1.0.0",
   "description": "Node.js for excel write, read, write & read",
   "main": "index.js",
@@ -8,8 +8,8 @@
   },
   "dependencies": {
     "dotenv": "^16.3.1",
+    "exceljs": "^4.3.0",
     "express": "^4.18.2",
-    "http": "^0.0.1-security",
-    "xlsx": "^0.18.5"
+    "http": "^0.0.1-security"
   }
 }

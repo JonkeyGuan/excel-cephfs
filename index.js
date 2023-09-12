@@ -8,7 +8,7 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 const READ_SVC = process.env.READ_SVC || 'http://localhost:8080';
 
-app.get('/write/:fileName/:repeat?/:read?', (req, res) => {
+app.get('/write/:fileName/:repeat?/:read?', async (req, res) => {
     let fileName = req.params.fileName;
     let read = req.params.read;
     let repeat = req.params.repeat;
@@ -17,11 +17,11 @@ app.get('/write/:fileName/:repeat?/:read?', (req, res) => {
         repeat = 1
     }
 
-    write.writeXsl(fileName, repeat);
+    await write.writeXsl(fileName, repeat);
 
     let text = "";
     if (read != undefined) {
-        text = triggerRead(fileName, res);
+        text = await triggerRead(fileName, res);
     } else {
         res.status(200).send({
             success: 'true',
@@ -31,9 +31,9 @@ app.get('/write/:fileName/:repeat?/:read?', (req, res) => {
     }
 });
 
-app.get('/read/:fileName', (req, res) => {
+app.get('/read/:fileName', async (req, res) => {
     let fileName = req.params.fileName;
-    text = read.readXsl(fileName);
+    text = await read.readXsl(fileName);
 
     res.status(200).send({
         success: 'true',
@@ -42,7 +42,7 @@ app.get('/read/:fileName', (req, res) => {
     })
 });
 
-const triggerRead = (fileName, res) => {
+const triggerRead = async (fileName, res) => {
     let text = "";
     console.log("trigger read: " + fileName);
     http.get(READ_SVC + '/read/' + fileName, (resp) => {
