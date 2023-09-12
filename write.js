@@ -1,37 +1,25 @@
-const xlsx = require('xlsx');
+var exceljs = require('exceljs');
 
-let jsonData = [{
-	key: "zhangsan1",
-	value: 30
-}, {
-	key: "lisi1",
-	value: 31
-}, {
-	key: "wangwu1",
-	value: 32
-}, {
-	key: "zhaoliu1",
-	value: 33
-}, {
-	key: "sunqi1",
-	value: 34,
-}];
+let data = [
+	["zhangsan1", 30],
+	["lisi1", 31],
+	["wangwu1", 32],
+	["zhaoliu1", 33],
+	["sunqi1", 34],
+]
 
 const DATA_LOC = process.env.DATA_LOC || './';
 
-exports.writeXsl = function (fileName, repeat) {
-	let json = [];
-	for (let i = 0; i < repeat; i++) {
-		json = json.concat(jsonData)
-	}
-	let jsonWorkSheet = xlsx.utils.json_to_sheet(json);
+exports.writeXsl = async function (fileName, repeat) {
+	var workbook = new exceljs.Workbook();
+	var sheet = workbook.addWorksheet('My Sheet');
 
-	let workBook = {
-		SheetNames: ['jsonWorkSheet'],
-		Sheets: {
-			'jsonWorkSheet': jsonWorkSheet,
-		}
-	};
-	xlsx.writeFile(workBook, DATA_LOC + "/" + fileName + ".xlsx");
-	console.log("write done: " + fileName);
+	for (let i = 0; i < repeat; i++) {
+		sheet.addRows(data);
+	}
+
+	await workbook.xlsx.writeFile(DATA_LOC + "/" + fileName + ".xlsx")
+    .then(function() {
+        console.log("write done: " + fileName);
+    });
 }

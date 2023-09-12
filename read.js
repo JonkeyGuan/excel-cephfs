@@ -1,28 +1,30 @@
-const xlsx = require('xlsx');
+var exceljs = require('exceljs');
 
 const DATA_LOC = process.env.DATA_LOC || './';
 
-exports.readXsl = function (fileName) {
-    let workbook = xlsx.readFile(DATA_LOC + "/" + fileName + ".xlsx");
-    let sheetNames = workbook.SheetNames;
-    let sheet1 = workbook.Sheets[sheetNames[0]];
+exports.readXsl = async function (fileName) {
+    var workbook = new exceljs.Workbook();
 
-    let range = xlsx.utils.decode_range(sheet1['!ref']);
+    let value = ""
+    await workbook.xlsx.readFile(DATA_LOC + "/" + fileName + ".xlsx").then(function () {
+        var worksheet = workbook.getWorksheet(1);
+        worksheet.eachRow(function (row, rowNumber) {
+            let row_value = '';
+            var rowSize = row.cellCount;
+            var numValues = row.actualCellCount;
+            row.eachCell(function (cell, colNumber) {
+                if (cell.type == 6) {
+                    var value = cell.result;
+                } else {
+                    var value = cell.value;
+                }
+                row_value += value + ", "
+            });
+            value += row_value;
+        });
 
-    let value = "";
-    for (let R = range.s.r; R <= range.e.r; ++R) {
-        let row_value = '';
-        for (let C = range.s.c; C <= range.e.c; ++C) {
-            let cell_address = { c: C, r: R };
-            let cell = xlsx.utils.encode_cell(cell_address);
-            if (sheet1[cell]) {
-                row_value += sheet1[cell].v + ", ";
-            } else {
-                row_value += ", ";
-            }
-        }
-        value = value + row_value;
-    }
+    });
+
     console.log("read done: " + fileName);
     return value;
 }

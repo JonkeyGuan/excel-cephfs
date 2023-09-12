@@ -1,1 +1,1 @@
-docker push quay.io/jonkey/excel:1.3
+docker push quay.io/jonkey/excel:1.4
