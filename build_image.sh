@@ -1,1 +1,1 @@
-docker build --platform linux/amd64 -t quay.io/jonkey/excel:1.4 . 
+docker build --platform linux/amd64 -t quay.io/jonkey/excel:1.5 . 

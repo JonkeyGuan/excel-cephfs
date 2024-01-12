@@ -1,6 +1,6 @@
 FROM registry.access.redhat.com/ubi8/nodejs-18:latest
 
-COPY package*.json ./
+COPY --chown=1001:0 package*.json ./
 
 RUN npm install --production
 
